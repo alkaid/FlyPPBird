@@ -1,8 +1,15 @@
 #pragma once
-class LoadingScene
+#include "BaseLayer.h"
+
+USING_NS_CC;
+
+class LoadingLayer:public BaseLayer
 {
 public:
-	LoadingScene();
-	virtual ~LoadingScene();
+	static Scene*  scene();
+	virtual bool init();
+	CREATE_FUNC(LoadingLayer);
+protected:
+private:
 };
 

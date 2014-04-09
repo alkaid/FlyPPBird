@@ -478,13 +478,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>main.png</string>
+            <string>main.pvr.ccz</string>
             <key>size</key>
             <string>{1024,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:016dc686e6263a476b0252e2145f1ee4:4dadf9f04f570c1c55a0e5206eadfb8b:693584bbba79ecadf35d6b2cf3a849c9$</string>
+            <string>$TexturePacker:SmartUpdate:e7588f1af17a6a6a27e80f00ca2745a3:4dadf9f04f570c1c55a0e5206eadfb8b:f825fbbb9a18ab865aa3d3b8d78761c2$</string>
             <key>textureFileName</key>
-            <string>main.png</string>
+            <string>main.pvr.ccz</string>
         </dict>
     </dict>
 </plist>
