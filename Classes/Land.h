@@ -10,6 +10,7 @@ public:
 	virtual ~Land();
 	virtual bool init();
 	CREATE_FUNC(Land);
+	void scroll();
 protected:
 	Point origin;
 	Size visibleSize;

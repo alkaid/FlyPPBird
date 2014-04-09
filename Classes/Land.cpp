@@ -31,3 +31,8 @@ bool Land::init()
 	return true;
 }
 
+void Land::scroll()
+{
+
+}
+

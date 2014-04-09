@@ -14,7 +14,8 @@ public:
 	virtual bool init();
 	CREATE_FUNC(WelcomeLayer);
 protected:
-	
+	Land* _land;
+	SpriteBatchNode* _batchNode;
 private:
 
 };
