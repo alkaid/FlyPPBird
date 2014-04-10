@@ -12,5 +12,10 @@ namespace R{
 	static const char* bg_day = "bg_day.png";
 	static const char* bg_night = "bg_night.png";
 	static const char* land = "ground.png";
+	static const char* bird_fmt = "bird%d_%d.png";
+	static const char* text_game_name = "text_game_name.png";
+	static const char* btn_rate = "btn_rate.png";
+	static const char* btn_play = "btn_play.png";
+	static const char* btn_rank = "btn_rank.png";
 	
 }

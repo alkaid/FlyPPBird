@@ -6,6 +6,7 @@ USING_NS_CC;
 
 Scene* LoadingLayer::scene()
 {
+	srand((unsigned)time(nullptr));
 	LoadingLayer* layer = LoadingLayer::create();
 	Scene* scene = Scene::create();
 	scene->addChild(layer);

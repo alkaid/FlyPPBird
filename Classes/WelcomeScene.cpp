@@ -8,6 +8,7 @@ WelcomeLayer::WelcomeLayer()
 {
 	_land = NULL;
 	_batchNode = NULL;
+	_bird = nullptr;
 }
 
 WelcomeLayer::~WelcomeLayer()
@@ -31,6 +32,7 @@ bool WelcomeLayer::init()
 	do 
 	{
 		CC_BREAK_IF(!BaseLayer::init());
+		//init land
 		_land = Land::create();
 		_land->retain();
 		Ref* obj=NULL;
@@ -41,8 +43,29 @@ bool WelcomeLayer::init()
 			Sprite* sprite = (Sprite*)obj;
 			_batchNode->addChild(sprite);
 		};
+		//init bird
+		_bird = Bird::creat();
+		_bird->setPosition(origin.x + visibleSize.width / 2, origin.y + _land->getOneLandSize().height + (visibleSize.height - _land->getOneLandSize().height) / 2);
+		_batchNode->addChild(_bird);
+		_bird->idle();
+		//init logo
+		Sprite* logo = Sprite::createWithSpriteFrameName(R::text_game_name);
+		logo->setPosition(_bird->getPositionX(), _bird->getPositionY() + 80);
+		_batchNode->addChild(logo);
+		//init menu
+		/*Sprite* btnRate = Sprite::createWithSpriteFrameName(R::btn_rate);
+		Sprite* btnPlay = Sprite::createWithSpriteFrameName(R::btn_play);
+		Sprite* btnRank = Sprite::createWithSpriteFrameName(R::btn_rank);
+		auto itemRate = MenuItemSprite::create()*/
+
+		this->scheduleUpdate();
 		bRet = true;
 	} while (0);
 	return bRet;
+}
+
+void WelcomeLayer::update(float dt)
+{
+	_land->scroll();
 }
 
