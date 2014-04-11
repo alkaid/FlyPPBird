@@ -20,7 +20,7 @@ bool Land::init()
 	visibleSize = Director::getInstance()->getVisibleSize();
 	Sprite* measureLand = Sprite::createWithSpriteFrameName(R::land);
 	_landSize = measureLand->getContentSize();
-	count = (visibleSize.width * 2 - 1) / _landSize.width+1;
+	count = (visibleSize.width * 2 - 1) / _landSize.width+1;	//保证滚动连续
 	lands = __Array::createWithCapacity(count);
 	lands->retain();
 	for (int i = 0; i < count; i++){
