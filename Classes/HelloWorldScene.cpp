@@ -1,4 +1,6 @@
 #include "HelloWorldScene.h"
+#include "R.h"
+#include "WelcomeScene.h"
 
 USING_NS_CC;
 
@@ -35,18 +37,34 @@ bool HelloWorld::init()
     //    you may modify it.
 
     // add a "close" icon to exit the progress. it's an autorelease object
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
-    
-	closeItem->setPosition(Point(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
+ //   auto closeItem = MenuItemImage::create(
+ //                                          "CloseNormal.png",
+ //                                          "CloseSelected.png",
+ //                                          CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
+ //   
+	//closeItem->setPosition(Point(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
+ //                               origin.y + closeItem->getContentSize().height/2));
 
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Point::ZERO);
-    this->addChild(menu, 1);
+ //   // create menu, it's an autorelease object
+ //   auto menu = Menu::create(closeItem, NULL);
+ //   menu->setPosition(Point::ZERO);
+    //this->addChild(menu, 1);
+
+	//add the start-menu to the current scene
+	Sprite *startButton = Sprite::create(R::btn_play);
+	Sprite *activeStartButton = Sprite::create(R::btn_play);
+	activeStartButton->setPositionY(5);
+	auto menuItem = MenuItemSprite::create(startButton, activeStartButton, NULL, [](Ref* sender){
+		log("start button.......");
+		//TransitionScene* scene = TransitionScene::create(1.0, WelcomeLayer::scene());
+		//Director::getInstance()->replaceScene(scene);
+
+	});
+	menuItem->setPosition(Point(origin.x + visibleSize.width / 2, origin.y + visibleSize.height * 2 / 5));
+
+	auto menu = Menu::create(menuItem, NULL);
+	menu->setPosition(Point(origin.x, origin.y));
+	this->addChild(menu, 1);
 
     /////////////////////////////
     // 3. add your codes below...

@@ -25,7 +25,9 @@ bool LoadingLayer::init()
 		//Texture2D::PVRImagesHavePremultipliedAlpha(true);
 		TextureCache::getInstance()->addImageAsync(R::main_png, [](Texture2D* texture){
 			CCSpriteFrameCache::getInstance()->addSpriteFramesWithFile(R::main_plist);
-			TransitionScene* scene = TransitionScene::create(1.0, WelcomeLayer::scene());
+			//TransitionScene* scene = TransitionScene::create(1.0, WelcomeLayer::scene());
+			//TODO 注意 此处不能用TransitionScene::create(),会导致第二个scene的Menu点击无效
+			TransitionScene* scene = TransitionFade::create(1.0, WelcomeLayer::scene());
 			Director::getInstance()->replaceScene(scene);
 		});
 		bRet = true;
