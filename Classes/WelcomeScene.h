@@ -15,7 +15,6 @@ public:
 	virtual bool init();
 	CREATE_FUNC(WelcomeLayer);
 	virtual void update(float dt);
-	void onStart(Ref* sender);
 protected:
 	Land* _land;
 	SpriteBatchNode* _batchNode;

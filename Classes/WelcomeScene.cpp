@@ -86,9 +86,3 @@ void WelcomeLayer::update(float dt)
 	_land->scroll();
 }
 
-void WelcomeLayer::onStart(Ref* sender)
-{
-	TransitionScene* scene = TransitionScene::create(0.5f, GameScene::create());
-	Director::getInstance()->replaceScene(scene);
-}
-

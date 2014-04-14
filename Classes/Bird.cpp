@@ -3,6 +3,8 @@
 
 USING_NS_CC;
 
+const float Bird::BIRD_RADIUS = 15;
+
 Bird::Bird()
 {
 	_state = IDLE;

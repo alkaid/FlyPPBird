@@ -11,6 +11,7 @@ enum BirdState
 class Bird:public Sprite
 {
 public:
+	static const float BIRD_RADIUS;
 	Bird();
 	virtual ~Bird();
 	virtual bool init();

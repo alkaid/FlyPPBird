@@ -17,5 +17,7 @@ namespace R{
 	static const char* btn_rate = "btn_rate.png";
 	static const char* btn_play = "btn_play.png";
 	static const char* btn_rank = "btn_rank.png";
+	static const char* text_ready = "text_ready.png";
+	static const char* tip_fly = "tip_fly.png";
 	
 }
