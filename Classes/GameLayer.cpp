@@ -3,17 +3,24 @@
 
 USING_NS_CC;
 
+const float GameLayer::PLAYER_READY_DISTANCE = 600;
+const float GameLayer::PIPE_SPACING_HORIZON = 140;
+const float GameLayer::PIPE_SPACING_VERTICAL = 100;
+const float GameLayer::PIPE_SHOW_MIN = 50;
+
 GameLayer::GameLayer()
 {
 	_land = NULL;
 	_batchNode = NULL;
 	_bird = nullptr;
 	_status = ready;
+	_pipeNodes = nullptr;
 }
 
 GameLayer::~GameLayer()
 {
 	CC_SAFE_RELEASE_NULL(_land);
+	CC_SAFE_RELEASE_NULL(_pipeNodes);
 }
 
 bool GameLayer::init()
@@ -55,9 +62,25 @@ bool GameLayer::init()
 		birdBody->setContactTestBitmask(-1);
 		birdBody->setGravityEnable(false);
 		_bird->setPhysicsBody(birdBody);
-		//
+		//init pipes
+		_pipeSize = Sprite::createWithSpriteFrameName(R::pipe_green_bottom)->getContentSize();
+		_pipeNodesCount = visibleSize.width / PIPE_SPACING_HORIZON + 1;
+		_pipeNodes = __Array::createWithCapacity(_pipeNodesCount);
+		for (int i = 0; i < _pipeNodesCount; i++){
+			_isNews.push_back(true);
+		}
+		_pipeNodes->retain();
+		createPipes();
 
 		this->scheduleUpdate();
+
+		auto contactListener = EventListenerPhysicsContact::create();
+		contactListener->onContactBegin = [this](PhysicsContact& contact)->bool
+		{
+			log("onContactBegin!!");
+			return true;
+		};
+		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 		bRet = true;
 	} while (0);
 	return bRet;
@@ -65,7 +88,23 @@ bool GameLayer::init()
 
 void GameLayer::update(float dt)
 {
-	_land->scroll();
+	float speed = 2;
+	_land->scroll(speed);
+	if (_status == start){
+		Ref* obj = nullptr;
+		CCARRAY_FOREACH(_pipeNodes, obj){
+			Node* pipeNode = (Node*)obj;
+			pipeNode->setPositionX(pipeNode->getPositionX() - speed);
+		}
+		for (int i = 0; i < _pipeNodesCount; i++){
+			Node* pipeNode = (Node*)(_pipeNodes->getObjectAtIndex(i));
+			if (pipeNode->getPositionX() < origin.x ){
+				int last = i - 1 < 0 ? _pipeNodesCount - 1 : i - 1;
+				Node* lastLand = (Node*)(_pipeNodes->getObjectAtIndex(last));
+				pipeNode->setPosition(lastLand->getPositionX() + PIPE_SPACING_HORIZON,getRandomHeight()+origin.y);
+			}
+		}
+	}
 }
 
 void GameLayer::onTouch()
@@ -89,3 +128,47 @@ void GameLayer::onTouch()
 	}
 }
 
+void GameLayer::createPipes()
+{
+	float x = origin.x + visibleSize.width / 2 + PLAYER_READY_DISTANCE;
+	for (int i = 0; i < _pipeNodesCount; i++)
+	{
+		Node* pipeNode = Node::create();
+		Sprite* pipeTop = Sprite::createWithSpriteFrameName(R::pipe_green_top);
+		Sprite* pipeBottom = Sprite::createWithSpriteFrameName(R::pipe_green_bottom);
+		pipeTop->setPosition(0, PIPE_SPACING_VERTICAL / 2 + _pipeSize.height / 2);
+		pipeBottom->setPosition(0, -PIPE_SPACING_VERTICAL / 2 - _pipeSize.height / 2);
+		pipeNode->addChild(pipeTop);
+		pipeNode->addChild(pipeBottom);
+
+		PhysicsBody* pipeBody = PhysicsBody::create();
+		pipeBody->addShape(PhysicsShapeBox::create(_pipeSize, PHYSICSSHAPE_MATERIAL_DEFAULT, Point(0, PIPE_SPACING_VERTICAL / 2 + _pipeSize.height / 2)));
+		pipeBody->addShape(PhysicsShapeBox::create(_pipeSize, PHYSICSSHAPE_MATERIAL_DEFAULT, Point(0, -PIPE_SPACING_VERTICAL / 2 - _pipeSize.height / 2)));
+		pipeBody->setDynamic(false);
+		pipeBody->setLinearDamping(0);
+		pipeBody->setContactTestBitmask(-1);
+		pipeBody->setGravityEnable(false);
+		pipeNode->setPhysicsBody(pipeBody);
+
+		pipeNode->setPosition(x, getRandomHeight()+origin.y);
+		//_batchNode->addChild(pipeNode);	//TODO 这里没找到合适的方法添加进batchNode，直接添加会报错
+		this->addChild(pipeNode,-1);
+		x += PIPE_SPACING_HORIZON;
+		_pipeNodes->addObject(pipeNode);
+	}
+	
+}
+
+float GameLayer::getRandomHeight()
+{
+	float landHeight = _land->getOneLandSize().height;
+	float rangeMin = landHeight + PIPE_SPACING_VERTICAL / 2 + PIPE_SHOW_MIN;
+	float rangeMax = visibleSize.height - PIPE_SPACING_VERTICAL / 2 - PIPE_SHOW_MIN;
+	return rand() % (int)(rangeMax - rangeMin) + rangeMin;
+}
+
+void GameLayer::rotateBird() {
+	float verticalSpeed = this->bird->getPhysicsBody()->getVelocity().y;
+	//log("vY=%f,max=%f,min=%f", verticalSpeed, max(-90, (verticalSpeed*0.2 + 60)), min(max(-90, (verticalSpeed*0.2 + 60)), 30));
+	this->bird->setRotation(-1 * min(max(-90, (verticalSpeed*0.2 + 60)), 30));
+}

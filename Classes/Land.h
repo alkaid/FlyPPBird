@@ -10,7 +10,7 @@ public:
 	virtual ~Land();
 	virtual bool init();
 	CREATE_FUNC(Land);
-	void scroll();
+	void scroll(float speed);
 	Size getOneLandSize();
 protected:
 	Point origin;

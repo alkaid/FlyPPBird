@@ -23,7 +23,7 @@ bool GameScene::init()
 	do 
 	{
 		CC_BREAK_IF(!Scene::initWithPhysics());
-		this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+		//this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 		this->getPhysicsWorld()->setGravity(Vect(0, -900));
 		Background* backgroundLayer = Background::create();
 		this->addChild(backgroundLayer);

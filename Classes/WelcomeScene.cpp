@@ -83,6 +83,6 @@ bool WelcomeLayer::init()
 
 void WelcomeLayer::update(float dt)
 {
-	_land->scroll();
+	_land->scroll(2);
 }
 

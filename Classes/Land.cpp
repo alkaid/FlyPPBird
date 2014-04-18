@@ -33,12 +33,12 @@ bool Land::init()
 	return true;
 }
 
-void Land::scroll()
+void Land::scroll(float speed)
 {
 	Ref* obj = NULL;
 	CCARRAY_FOREACH(lands, obj){
 		Sprite* land = (Sprite*)obj;
-		land->setPositionX(land->getPositionX() - 2);
+		land->setPositionX(land->getPositionX() - speed);
 	}
 	for (int i = 0; i < count; i++){
 		Sprite* land = (Sprite*)(lands->getObjectAtIndex(i));

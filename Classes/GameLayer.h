@@ -24,6 +24,14 @@ public:
 class GameLayer :public BaseLayer,public PlayDelegate
 {
 public:
+	/*玩家等待多少距离后开始*/
+	static const float PLAYER_READY_DISTANCE;
+	/*管道之间的水平距离*/
+	static const float PIPE_SPACING_HORIZON;
+	/*上下管道之间距离*/
+	static const float PIPE_SPACING_VERTICAL;
+	/*上或下管道至少显示的长度 */
+	static const float PIPE_SHOW_MIN;
 	GameLayer();
 	virtual ~GameLayer();
 	virtual bool init();
@@ -37,4 +45,11 @@ private:
 	SpriteBatchNode* _batchNode;
 	Bird* _bird;
 	GameStatus _status;
+	Size _pipeSize;
+	__Array* _pipeNodes;
+	int _pipeNodesCount;
+	std::vector<bool> _isNews;
+	void createPipes();
+	float getRandomHeight();
+	void rotateBird();
 };
