@@ -15,6 +15,8 @@ GameLayer::GameLayer()
 	_bird = nullptr;
 	_status = ready;
 	_pipeNodes = nullptr;
+	_isNewRecord = false;
+	_score = 0;
 }
 
 GameLayer::~GameLayer()
@@ -78,6 +80,7 @@ bool GameLayer::init()
 		contactListener->onContactBegin = [this](PhysicsContact& contact)->bool
 		{
 			log("onContactBegin!!");
+			gameOver();
 			return true;
 		};
 		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
@@ -102,8 +105,11 @@ void GameLayer::update(float dt)
 				int last = i - 1 < 0 ? _pipeNodesCount - 1 : i - 1;
 				Node* lastLand = (Node*)(_pipeNodes->getObjectAtIndex(last));
 				pipeNode->setPosition(lastLand->getPositionX() + PIPE_SPACING_HORIZON,getRandomHeight()+origin.y);
+				_isNews[i] = true;
 			}
 		}
+		rotateBird();
+		checkHit();
 	}
 }
 
@@ -159,6 +165,27 @@ void GameLayer::createPipes()
 	
 }
 
+void GameLayer::gameOver()
+{
+	if (_status==end)
+	{
+		return;
+	}
+	_status = end;
+	this->unscheduleUpdate();
+	int bestScore = UserDefault::getInstance()->getIntegerForKey("best_score");
+	if (_score > bestScore){
+		UserDefault::getInstance()->setIntegerForKey("best_score", _score);
+		_isNewRecord = true;
+	}
+	_bird->die();
+	_bird->setRotation(-90);
+	_bird->stopAllActions();
+	//auto fadeOut = FadeOut::create(1.5);
+	//_bird->runAction(fadeOut);
+	_delegate->onGameEnd();
+}
+
 float GameLayer::getRandomHeight()
 {
 	float landHeight = _land->getOneLandSize().height;
@@ -168,7 +195,19 @@ float GameLayer::getRandomHeight()
 }
 
 void GameLayer::rotateBird() {
-	float verticalSpeed = this->bird->getPhysicsBody()->getVelocity().y;
+	float verticalSpeed = this->_bird->getPhysicsBody()->getVelocity().y;
 	//log("vY=%f,max=%f,min=%f", verticalSpeed, max(-90, (verticalSpeed*0.2 + 60)), min(max(-90, (verticalSpeed*0.2 + 60)), 30));
-	this->bird->setRotation(-1 * min(max(-90, (verticalSpeed*0.2 + 60)), 30));
+	this->_bird->setRotation(-1 * MIN(MAX(-90, (verticalSpeed*0.2 + 60)), 30));
+}
+
+void GameLayer::checkHit()
+{
+	for (int i = 0; i < _pipeNodesCount; i++){
+		Node* pipeNode = (Node*)(_pipeNodes->getObjectAtIndex(i));
+		if (pipeNode->getPositionX() < _bird->getPositionX() && _isNews[i]==true){
+			_score++;
+			_isNews[i] = false;
+		}
+	}
+	_delegate->onGamePlaying(_score);
 }

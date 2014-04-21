@@ -48,8 +48,12 @@ private:
 	Size _pipeSize;
 	__Array* _pipeNodes;
 	int _pipeNodesCount;
+	int _score;
+	bool _isNewRecord;
 	std::vector<bool> _isNews;
 	void createPipes();
 	float getRandomHeight();
 	void rotateBird();
+	void checkHit();
+	void gameOver();
 };
